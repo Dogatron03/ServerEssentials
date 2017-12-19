@@ -8,6 +8,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SECommand {
@@ -19,27 +20,39 @@ public class SECommand {
     public final String usage;
     public final int argsLength;
     public final boolean playerOnly;
+    public final String[] aliases;
     public final SECommand i;
     public final CommandBase mc;
 
 
-    public SECommand(String name, String permission, String usage, int argsLength, boolean playerOnly) {
+    public SECommand(String name, String permission, String usage, int argsLength, boolean playerOnly, String[] aliases) {
         this.name = name;
         this.permission = permission;
         this.usage = usage;
         this.argsLength = argsLength;
         this.playerOnly = playerOnly;
+        this.aliases = aliases;
         this.i = this;
         mc = new CommandBase() {
 
-            @Override
             public String getCommandName() {
                 return i.name;
             }
 
-            @Override
             public String getCommandUsage(ICommandSender sender) {
                 return i.usage;
+            }
+
+            public int getRequiredPermissionLevel() {
+                return 0;
+            }
+
+            public List<String> getCommandAliases() {
+                return Arrays.asList(i.aliases);
+            }
+
+            public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+                return true;
             }
 
             @Override
