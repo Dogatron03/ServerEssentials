@@ -1,7 +1,9 @@
 package net.diversionmc.ServerEssentials.managment;
 
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.Loader;
 import scala.actors.threadpool.Arrays;
 
@@ -30,9 +32,14 @@ public enum SERoles {
 
     public static void loadConfig() {
         File file = new File(Loader.instance().getConfigDir() + File.separator + "ServerEssentials", "roles.cfg");
-        file.mkdir();
         roles = new Configuration(file);
         roles.load();
+        ConfigCategory mod = roles.getCategory("mod");
+        if(!mod.containsKey("members")) mod.put("members", new Property("members", new String[]{"'069a79f4-44e9-4726-a5be-fca90e38aaf5'"}, Property.Type.STRING));
+        ConfigCategory wizard = roles.getCategory("wizard");
+        if(!wizard.containsKey("members")) wizard.put("members", new Property("members", new String[]{"'61699b2e-d327-4a01-9f1e-0ea8c3f06bc6'"}, Property.Type.STRING));
+        ConfigCategory admin = roles.getCategory("admin");
+        if(!admin.containsKey("members")) admin.put("members", new Property("members", new String[]{"'696a82ce-41f4-4b51-aa31-b8709b8686f0'"}, Property.Type.STRING));
         roles.save();
     }
 
@@ -40,17 +47,17 @@ public enum SERoles {
         {
             String[] membersRaw = roles.getCategory("mod").get("members").getStringList();
             List<String> members = Arrays.asList(membersRaw);
-            if (members.contains(p.getUniqueID())) return MODERATOR;
+            if (members.contains(p.getUniqueID().toString())) return MODERATOR;
         }
         {
             String[] membersRaw = roles.getCategory("wizard").get("members").getStringList();
             List<String> members = Arrays.asList(membersRaw);
-            if (members.contains(p.getUniqueID())) return WIZARD;
+            if (members.contains(p.getUniqueID().toString())) return WIZARD;
         }
         {
             String[] membersRaw = roles.getCategory("admin").get("members").getStringList();
             List<String> members = Arrays.asList(membersRaw);
-            if (members.contains(p.getUniqueID())) return ADMIN;
+            if (members.contains(p.getUniqueID().toString())) return ADMIN;
         }
         return MEMBER;
     }

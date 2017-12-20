@@ -2,6 +2,7 @@ package net.diversionmc.ServerEssentials.managment;
 
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -17,7 +18,6 @@ public class SEPermissions {
 
     public static void loadConfig() {
         File file = new File(Loader.instance().getConfigDir() + File.separator + "ServerEssentials", "permissions.cfg");
-        file.mkdir();
         perms = new Configuration(file);
         perms.load();
         ConfigCategory perm = perms.getCategory("permissions");

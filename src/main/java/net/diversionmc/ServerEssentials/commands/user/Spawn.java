@@ -1,4 +1,4 @@
-package net.diversionmc.ServerEssentials.commands;
+package net.diversionmc.ServerEssentials.commands.user;
 
 import net.diversionmc.ServerEssentials.managment.SEColour;
 import net.diversionmc.ServerEssentials.managment.SECommand;

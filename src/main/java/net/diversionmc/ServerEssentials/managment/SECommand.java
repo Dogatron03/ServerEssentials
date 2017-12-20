@@ -1,5 +1,6 @@
 package net.diversionmc.ServerEssentials.managment;
 
+import net.diversionmc.ServerEssentials.commands.user.Spawn;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -25,7 +26,7 @@ public class SECommand {
     public final CommandBase mc;
 
 
-    public SECommand(String name, String permission, String usage, int argsLength, boolean playerOnly, String[] aliases) {
+    public SECommand(String name, String permission, String usage, int argsLength, boolean playerOnly, String... aliases) {
         this.name = name;
         this.permission = permission;
         this.usage = usage;
@@ -33,6 +34,8 @@ public class SECommand {
         this.playerOnly = playerOnly;
         this.aliases = aliases;
         this.i = this;
+        commands.add(this);
+        System.out.println("Registered Command: " + name);
         mc = new CommandBase() {
 
             public String getCommandName() {
@@ -55,7 +58,6 @@ public class SECommand {
                 return true;
             }
 
-            @Override
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 if (!SEPermissions.hasPermission(sender, i.permission)) {
                     sender.addChatMessage(new TextComponentString(SEColour.RED + "You don't have enough permissions to perform this command!"));
@@ -77,5 +79,9 @@ public class SECommand {
 
     public void call(MinecraftServer s, ICommandSender p, String[] args) {
 
+    }
+
+    public static void loadCommands(){
+        new Spawn();
     }
 }
