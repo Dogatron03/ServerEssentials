@@ -9,6 +9,7 @@ import scala.actors.threadpool.Arrays;
 
 import java.io.File;
 import java.util.List;
+import java.util.UUID;
 
 public enum SERoles {
 
@@ -19,14 +20,18 @@ public enum SERoles {
 
     public static Configuration roles;
 
-    String id;
-    String prefix;
-    SEColour colour;
+    public String id;
+    public String prefix;
+    public SEColour colour;
 
     SERoles(String id, String prefix, SEColour colour) {
         this.id = id;
         this.prefix = prefix;
         this.colour = colour;
+    }
+
+    public static SERoles getById(String id){
+        return ((List<SERoles>)Arrays.asList(values())).stream().filter(r -> r.id.equalsIgnoreCase(id)).findFirst().orElse(null);
     }
 
 
@@ -60,6 +65,34 @@ public enum SERoles {
             if (members.contains(p.getUniqueID().toString())) return ADMIN;
         }
         return MEMBER;
+    }
+
+    public static SERoles getRole(UUID u) {
+        {
+            String[] membersRaw = roles.getCategory("mod").get("members").getStringList();
+            List<String> members = Arrays.asList(membersRaw);
+            if (members.contains(u.toString())) return MODERATOR;
+        }
+        {
+            String[] membersRaw = roles.getCategory("wizard").get("members").getStringList();
+            List<String> members = Arrays.asList(membersRaw);
+            if (members.contains(u.toString())) return WIZARD;
+        }
+        {
+            String[] membersRaw = roles.getCategory("admin").get("members").getStringList();
+            List<String> members = Arrays.asList(membersRaw);
+            if (members.contains(u.toString())) return ADMIN;
+        }
+        return MEMBER;
+    }
+
+    public static ConfigCategory getConfigCategory(SERoles role){
+        switch(role){
+            case MODERATOR: return roles.getCategory("mod");
+            case WIZARD: return roles.getCategory("wizard");
+            case ADMIN: return roles.getCategory("admin");
+        }
+        return null;
     }
 
 

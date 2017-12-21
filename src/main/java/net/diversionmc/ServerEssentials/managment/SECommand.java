@@ -1,5 +1,7 @@
 package net.diversionmc.ServerEssentials.managment;
 
+import net.diversionmc.ServerEssentials.ServerEssentials;
+import net.diversionmc.ServerEssentials.commands.admin.Permissions;
 import net.diversionmc.ServerEssentials.commands.user.Spawn;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -11,6 +13,8 @@ import net.minecraft.util.text.TextComponentString;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static net.diversionmc.ServerEssentials.ServerEssentials.info;
 
 public class SECommand {
 
@@ -35,7 +39,7 @@ public class SECommand {
         this.aliases = aliases;
         this.i = this;
         commands.add(this);
-        System.out.println("Registered Command: " + name);
+        info("Registered Command: " + name);
         mc = new CommandBase() {
 
             public String getCommandName() {
@@ -59,16 +63,23 @@ public class SECommand {
             }
 
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-                if (!SEPermissions.hasPermission(sender, i.permission)) {
+                if (!SEPermissions.hasPermission(sender, i.permission) && sender instanceof EntityPlayerMP) {
                     sender.addChatMessage(new TextComponentString(SEColour.RED + "You don't have enough permissions to perform this command!"));
                     return;
                 }
                 if (i.argsLength > args.length) {
                     sender.addChatMessage(new TextComponentString(SEColour.RED + "Invalid Arguments: " + i.usage));
+                    return;
                 }
-                if (i.playerOnly) i.call(server, getCommandSenderAsPlayer(sender), args);
+                if (i.playerOnly) i.call(server, getCSAsPl(sender), args);
                 else i.call(server, sender, args);
             }
+
+            public EntityPlayerMP getCSAsPl(ICommandSender sender){
+                if(sender instanceof EntityPlayerMP) return (EntityPlayerMP) sender;
+                throw new RuntimeException(SEColour.RED + "This command can only be ran by a player!");
+            }
+
         };
     }
 
@@ -83,5 +94,6 @@ public class SECommand {
 
     public static void loadCommands(){
         new Spawn();
+        new Permissions();
     }
 }
