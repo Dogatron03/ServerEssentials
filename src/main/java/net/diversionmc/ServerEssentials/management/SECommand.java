@@ -1,7 +1,7 @@
-package net.diversionmc.ServerEssentials.managment;
+package net.diversionmc.ServerEssentials.management;
 
-import net.diversionmc.ServerEssentials.ServerEssentials;
 import net.diversionmc.ServerEssentials.commands.admin.Permissions;
+import net.diversionmc.ServerEssentials.commands.mod.Fly;
 import net.diversionmc.ServerEssentials.commands.user.Spawn;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -94,7 +94,13 @@ public class SECommand {
     }
 
     public static void loadCommands(){
+        //User Commands
         new Spawn();
+
+        //Mod Commands
+        new Fly();
+
+        //Admin Commands
         new Permissions();
     }
 }

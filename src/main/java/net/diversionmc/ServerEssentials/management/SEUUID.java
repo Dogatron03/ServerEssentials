@@ -1,6 +1,5 @@
-package net.diversionmc.ServerEssentials.managment;
+package net.diversionmc.ServerEssentials.management;
 
-import com.sun.deploy.config.Config;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;

@@ -1,8 +1,8 @@
 package net.diversionmc.ServerEssentials.commands.user;
 
-import net.diversionmc.ServerEssentials.managment.SEColour;
-import net.diversionmc.ServerEssentials.managment.SECommand;
-import net.diversionmc.ServerEssentials.managment.SEConfig;
+import net.diversionmc.ServerEssentials.management.SEColour;
+import net.diversionmc.ServerEssentials.management.SECommand;
+import net.diversionmc.ServerEssentials.management.SEConfig;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;

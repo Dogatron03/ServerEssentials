@@ -1,4 +1,4 @@
-package net.diversionmc.ServerEssentials.managment;
+package net.diversionmc.ServerEssentials.management;
 
 import net.diversionmc.ServerEssentials.ServerEssentials;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -8,7 +8,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 
 import static net.diversionmc.ServerEssentials.ServerEssentials.info;
 

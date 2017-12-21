@@ -1,4 +1,4 @@
-package net.diversionmc.ServerEssentials.managment;
+package net.diversionmc.ServerEssentials.management;
 
 public enum SEColour {
     BLACK("§0"),

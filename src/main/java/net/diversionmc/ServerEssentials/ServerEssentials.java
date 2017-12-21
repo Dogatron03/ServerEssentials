@@ -1,6 +1,6 @@
 package net.diversionmc.ServerEssentials;
 
-import net.diversionmc.ServerEssentials.managment.*;
+import net.diversionmc.ServerEssentials.management.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;

@@ -1,7 +1,8 @@
 package net.diversionmc.ServerEssentials.commands.admin;
 
 import net.diversionmc.ServerEssentials.ServerEssentials;
-import net.diversionmc.ServerEssentials.managment.*;
+import net.diversionmc.ServerEssentials.commands.user.ConfigCommands;
+import net.diversionmc.ServerEssentials.management.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
@@ -25,7 +26,7 @@ public class Permissions extends SECommand {
             return;
         }
         switch (args[0].toLowerCase()) {
-            case "role": {
+            case "user": {
                 if (args.length >= 2) {
                     switch (args[1]) {
                         case "set": {
@@ -75,6 +76,70 @@ public class Permissions extends SECommand {
                             p.addChatMessage(new TextComponentString(SEColour.GREEN + args[2] + "'s role is " + role.colour + role.prefix + " (" + role.id + ")!"));
                             return;
                         }
+                        case "check": {
+                            if (args.length < 4) {
+                                sendHelp(p);
+                                return;
+                            }
+                            UUID u = SEUUID.get(args[2]);
+                            if (u == null) {
+                                p.addChatMessage(new TextComponentString(SEColour.RED + "That's not a valid player!"));
+                                return;
+                            }
+                            p.addChatMessage(new TextComponentString(SEPermissions.hasPermission(u, args[3]) ? SEColour.GREEN + args[2] + " has the permission " + args[3] + "!" : SEColour.GREEN + args[2] + SEColour.RED + " does not" + SEColour.GREEN + " have the permission " + args[3] + "!"));
+                            return;
+                        }
+                    }
+                    sendHelp(p);
+                } else {
+                    sendHelp(p);
+                }
+                return;
+            }
+            case "role": {
+                if (args.length >= 2) {
+                    switch (args[1]) {
+                        case "add": {
+                            if (args.length < 4) {
+                                sendHelp(p);
+                                return;
+                            }
+                            SERoles r = SERoles.getById(args[2]);
+                            if (r == null) {
+                                p.addChatMessage(new TextComponentString(SEColour.RED + "That's not a valid role!"));
+                                return;
+                            }
+                            SEPermissions.givePermission(r, args[3]);
+                            p.addChatMessage(new TextComponentString(SEColour.GREEN + "Given " + args[2] + " the permission " + args[3] + "!"));
+                            return;
+                        }
+                        case "remove": {
+                            if (args.length < 4) {
+                                sendHelp(p);
+                                return;
+                            }
+                            SERoles r = SERoles.getById(args[2]);
+                            if (r == null) {
+                                p.addChatMessage(new TextComponentString(SEColour.RED + "That's not a valid role!"));
+                                return;
+                            }
+                            SEPermissions.takePermission(r, args[3]);
+                            p.addChatMessage(new TextComponentString(SEColour.GREEN + "Removed permission " + args[3] + " from " + args[2] + "!"));
+                            return;
+                        }
+                        case "check": {
+                            if (args.length < 4) {
+                                sendHelp(p);
+                                return;
+                            }
+                            SERoles r = SERoles.getById(args[2]);
+                            if (r == null) {
+                                p.addChatMessage(new TextComponentString(SEColour.RED + "That's not a valid role!"));
+                                return;
+                            }
+                            p.addChatMessage(new TextComponentString(SEPermissions.hasPermission(r, args[3]) ? SEColour.GREEN + args[2] + " has the permission " + args[3] + "!" : SEColour.GREEN + args[2] + SEColour.RED + " does not" + SEColour.GREEN + " have the permission " + args[3] + "!"));
+                            return;
+                        }
                     }
                     sendHelp(p);
                 } else {
@@ -87,6 +152,7 @@ public class Permissions extends SECommand {
                 SERoles.loadConfig();
                 SEConfig.loadConfig();
                 SEUUID.loadConfig();
+                ConfigCommands.loadConfig();
                 p.addChatMessage(new TextComponentString(SEColour.GREEN + "Reloaded Config Files!"));
                 return;
             }
@@ -95,6 +161,7 @@ public class Permissions extends SECommand {
                 SERoles.roles.save();
                 SEConfig.config.save();
                 SEUUID.uuid.save();
+                ConfigCommands.config.save();
                 p.addChatMessage(new TextComponentString(SEColour.GREEN + "Saved Config Files!"));
                 return;
             }
@@ -106,12 +173,13 @@ public class Permissions extends SECommand {
 
     public void sendHelp(ICommandSender p) {
         p.addChatMessage(new TextComponentString(SEColour.BLUE + "ServerEssentials Permissions: "));
+        p.addChatMessage(new TextComponentString(SEColour.BLUE + "* /perms user set <user> <role> - Sets a users role"));
+        p.addChatMessage(new TextComponentString(SEColour.BLUE + "* /perms user get <user> - Gets users role"));
+        p.addChatMessage(new TextComponentString(SEColour.BLUE + "* /perms user check <user> <permission> - Check if a user has permission"));
+        p.addChatMessage(new TextComponentString(SEColour.BLUE + "* /perms role add <role> <permission> - Gives a role a permission"));
+        p.addChatMessage(new TextComponentString(SEColour.BLUE + "* /perms role remove <role> <permission> - Removes a roles permission"));
+        p.addChatMessage(new TextComponentString(SEColour.BLUE + "* /perms role check <role> <permission> - Check if a role has permission"));
         p.addChatMessage(new TextComponentString(SEColour.BLUE + "* /perms reload - Reloads permissions config"));
-        p.addChatMessage(new TextComponentString(SEColour.BLUE + "* /perms role set <user> <role> - Sets a users role"));
-        p.addChatMessage(new TextComponentString(SEColour.BLUE + "* /perms role get <user> - Gets users role"));
-        p.addChatMessage(new TextComponentString(SEColour.BLUE + "* /perms add <role> <permission> - Gives a role a permission"));
-        p.addChatMessage(new TextComponentString(SEColour.BLUE + "* /perms remove <role> <permission> - Removes a roles permission"));
-        p.addChatMessage(new TextComponentString(SEColour.BLUE + "* /perms check <role> <permission> - Check if a role has permission"));
         p.addChatMessage(new TextComponentString(SEColour.BLUE + "* /perms save - Save permissions config"));
         p.addChatMessage(new TextComponentString(SEColour.BLUE + "ServerEssentials version: " + ServerEssentials.VERSION));
     }

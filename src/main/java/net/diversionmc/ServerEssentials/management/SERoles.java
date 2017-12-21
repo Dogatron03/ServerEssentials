@@ -1,4 +1,4 @@
-package net.diversionmc.ServerEssentials.managment;
+package net.diversionmc.ServerEssentials.management;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.config.ConfigCategory;
