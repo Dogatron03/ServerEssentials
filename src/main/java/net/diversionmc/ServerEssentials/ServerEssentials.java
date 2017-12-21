@@ -35,13 +35,14 @@ public class ServerEssentials {
     @Mod.EventHandler
     public void onEnable(FMLServerStartingEvent e) {
         log = LogManager.getFormatterLogger(MODID);
-        info("Welcome to ServerEssentials, the one mod needed for a modded server admin!");
+        info("Welcome to ServerEssentials, the only mod needed for a modded server admin!");
         server = e.getServer();
         File file = new File(Loader.instance().getConfigDir() + File.separator + "ServerEssentials");
         file.mkdir();
         SEPermissions.loadConfig();
         SERoles.loadConfig();
         SEConfig.loadConfig();
+        SEUUID.loadConfig();
         info("Loaded config files, proceeding to load commands!");
         SECommand.loadCommands();
         MinecraftForge.EVENT_BUS.register(new SEEvents());

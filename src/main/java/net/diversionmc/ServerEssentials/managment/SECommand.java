@@ -6,6 +6,7 @@ import net.diversionmc.ServerEssentials.commands.user.Spawn;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
@@ -75,9 +76,9 @@ public class SECommand {
                 else i.call(server, sender, args);
             }
 
-            public EntityPlayerMP getCSAsPl(ICommandSender sender){
+            public EntityPlayerMP getCSAsPl(ICommandSender sender) throws PlayerNotFoundException{
                 if(sender instanceof EntityPlayerMP) return (EntityPlayerMP) sender;
-                throw new RuntimeException(SEColour.RED + "This command can only be ran by a player!");
+                throw new PlayerNotFoundException(SEColour.RED + "This command can only be ran by a player!");
             }
 
         };

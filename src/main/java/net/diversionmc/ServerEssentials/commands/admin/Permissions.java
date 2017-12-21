@@ -3,12 +3,12 @@ package net.diversionmc.ServerEssentials.commands.admin;
 import net.diversionmc.ServerEssentials.ServerEssentials;
 import net.diversionmc.ServerEssentials.managment.*;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Property;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -33,29 +33,29 @@ public class Permissions extends SECommand {
                                 sendHelp(p);
                                 return;
                             }
-                            UUID u = EntityPlayerMP.getOfflineUUID(args[2]);
+                            UUID u = SEUUID.get(args[2]);
                             if (u == null) {
                                 p.addChatMessage(new TextComponentString(SEColour.RED + "That's not a valid player!"));
                                 return;
                             }
-                            ConfigCategory c = SERoles.getConfigCategory(SERoles.getRole(u));
+                            SERoles role = SERoles.getRole(u);
                             SERoles newRole = SERoles.getById(args[3]);
                             if (newRole == null) {
                                 p.addChatMessage(new TextComponentString(SEColour.RED + "That't not a valid role!"));
                                 return;
                             }
-                            if (c != null) {
-                                List<String> members = Arrays.asList(c.get("members").getStringList());
+                            if (role != SERoles.MEMBER) {
+                                ConfigCategory c = SERoles.getConfigCategory(SERoles.getRole(u));
+                                List<String> members = new ArrayList<>(Arrays.asList(c.get("members").getStringList()));
                                 members.remove(u.toString());
                                 c.put("members", new Property("members", members.toArray(new String[]{}), Property.Type.STRING));
                                 SERoles.roles.save();
                             }
                             if (newRole != SERoles.MEMBER) {
-                                ConfigCategory cfg = SERoles.getConfigCategory(newRole);
-                                List<String> members = Arrays.asList(cfg.get("members").getStringList());
-                                members.forEach(m -> System.out.println(m));
+                                ConfigCategory c = SERoles.getConfigCategory(newRole);
+                                List<String> members = new ArrayList<>(Arrays.asList(c.get("members").getStringList()));
                                 members.add(u.toString());
-                                cfg.put("members", new Property("members", members.toArray(new String[]{}), Property.Type.STRING));
+                                c.put("members", new Property("members", members.toArray(new String[]{}), Property.Type.STRING));
                                 SERoles.roles.save();
                             }
                             p.addChatMessage(new TextComponentString(SEColour.GREEN + "Successfully changed " + args[2] + "'s role to be " + args[3] + "!"));
@@ -66,13 +66,13 @@ public class Permissions extends SECommand {
                                 sendHelp(p);
                                 return;
                             }
-                            UUID u = EntityPlayerMP.getOfflineUUID(args[2]);
+                            UUID u = SEUUID.get(args[2]);
                             if (u == null) {
                                 p.addChatMessage(new TextComponentString(SEColour.RED + "That's not a valid player!"));
                                 return;
                             }
                             SERoles role = SERoles.getRole(u);
-                            p.addChatMessage(new TextComponentString(SEColour.GREEN + args[2] + "'s role is" + role.colour + role.prefix + " (" + role.id + ")!"));
+                            p.addChatMessage(new TextComponentString(SEColour.GREEN + args[2] + "'s role is " + role.colour + role.prefix + " (" + role.id + ")!"));
                             return;
                         }
                     }
@@ -86,6 +86,7 @@ public class Permissions extends SECommand {
                 SEPermissions.loadConfig();
                 SERoles.loadConfig();
                 SEConfig.loadConfig();
+                SEUUID.loadConfig();
                 p.addChatMessage(new TextComponentString(SEColour.GREEN + "Reloaded Config Files!"));
                 return;
             }
@@ -93,6 +94,7 @@ public class Permissions extends SECommand {
                 SEPermissions.perms.save();
                 SERoles.roles.save();
                 SEConfig.config.save();
+                SEUUID.uuid.save();
                 p.addChatMessage(new TextComponentString(SEColour.GREEN + "Saved Config Files!"));
                 return;
             }
